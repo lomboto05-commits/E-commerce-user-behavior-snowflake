@@ -33,6 +33,8 @@ Power BI Dashboard
 - **Snowflake** – data storage, transformation and analysis
 
 
+
+
 ## 🗄️ Snowflake Data Analysis
 
 The project uses a layered structure within Snowflake:

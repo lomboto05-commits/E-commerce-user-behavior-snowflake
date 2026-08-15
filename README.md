@@ -32,7 +32,6 @@ Power BI Dashboard
 
 - **Snowflake** – data storage, transformation and analysis
 
-- ---
 
 ## 🗄️ Snowflake Data Analysis
 

@@ -1,236 +1,244 @@
-# E-commerce User Behaviour Analysis
+# E-Commerce User Behaviour Analysis
 
-E-commerce user behaviour analytics using Snowflake, SQL and Power BI.
+## 📊 Project Overview
 
-## Project Overview
+This project analyses e-commerce user behaviour using **Snowflake SQL** and **Power BI**, focusing on customer engagement, purchasing behaviour, revenue and conversion throughout the e-commerce journey.
 
-This project analyses e-commerce event data to understand customer engagement, purchasing behaviour, revenue patterns and product performance.
+The project uses **884,474 recorded events** covering product views, cart activity and purchases. The data was cleaned and validated in Snowflake before being analysed using SQL and presented through a Power BI dashboard.
 
-The analysis was performed using SQL in Snowflake, with the results presented through an interactive Power BI dashboard.
+The main objective was to understand how users interact with an e-commerce platform and identify patterns across the customer journey from product discovery through to purchase.
 
-The project focuses on transforming raw e-commerce event data into meaningful business insights.
+---
 
-## Technologies Used
+## 🔄 Analytics Workflow
 
-- Snowflake
-- SQL
-- Power BI
-- GitHub
+E-Commerce Event Data  
+↓  
+Snowflake RAW Layer  
+↓  
+Data Cleaning & Validation  
+↓  
+Clean Analytical Dataset  
+↓  
+SQL Analysis  
+↓  
+Funnel & Revenue Analysis  
+↓  
+Power BI Dashboard
 
-## Dataset
+---
 
-The dataset contains e-commerce user events, including:
+## 🛠️ Technologies Used
 
-- Product views
-- Add-to-cart events
-- Purchases
-- Product categories
+- **Snowflake** – data storage, transformation and analysis
+
+- ---
+
+## 🗄️ Snowflake Data Analysis
+
+The project uses a layered structure within Snowflake:
+
+**RAW**
+- `EVENTS`
+
+**CLEANED**
+- `EVENTS_CLEAN`
+- `EVENTS_CLEAN_FINAL`
+
+The source CSV was loaded into the `RAW.EVENTS` table using the Snowflake interface.
+
+The data was then cleaned and validated before being used for the final analysis.
+
+### Data Quality Checks
+
+The cleaning and validation process included:
+
+- NULL value checks
+- Duplicate record detection
+- Duplicate user/product/time combinations
+- Price validation
+- Detection of zero and negative prices
+- Minimum and maximum price checks
+- Timestamp validation
+- Event-type validation
+
+Snowflake functions including `COUNT_IF` and `TRY_TO_TIMESTAMP_NTZ` were used during the validation process.
+
+The raw data was preserved to maintain traceability between the source data and the final analytical dataset.
+
+---
+
+## 📈 Key Metrics
+
+| Metric | Result |
+|---|---:|
+| Total Events | **884,474** |
+| Purchase Events | **37,343** |
+| Purchase Revenue | **€5,125,113.92** |
+| Session Cart-to-Purchase Rate | **50.31%** |
+
+---
+
+## 🛒 Customer Journey & Funnel Analysis
+
+A key part of the analysis was understanding movement through the e-commerce funnel.
+
+**Product Views → Cart → Purchase**
+
+Two approaches to cart-to-purchase conversion were evaluated.
+
+### Event-Level Conversion
+
+The event-level calculation produced:
+
+**69.11%**
+
+This compares purchase events against cart events.
+
+### Session-Level Conversion
+
+A more meaningful funnel measure was created at the **session level**.
+
+The session-level calculation identifies sessions containing a cart event and checks whether those same sessions also contained a purchase.
+
+The resulting conversion rate was:
+
+### **50.31%**
+
+The session-level measure provides a more appropriate representation of conversion because it evaluates the customer journey at the session level rather than simply comparing event counts.
+
+A CTE and session-based logic were used for the analysis, with a JOIN-based calculation used to validate the result.
+
+---
+
+## 💰 Revenue Analysis
+
+Purchase revenue was calculated using purchase events only.
+
+### **€5,125,113.92**
+
+across:
+
+### **37,343 purchase events**
+
+Revenue was analysed across:
+
 - Brands
-- Prices
-- User IDs
+- Product categories
+- Individual users
+- Purchase activity
 
-The data was analysed to identify patterns in customer engagement, purchasing activity and spending behaviour.
+The analysis also included metric validation between the Snowflake SQL results and the Power BI dashboard.
 
-## SQL Analysis
+Revenue measures were aligned using consistent purchase-event filtering so that the dashboard and SQL analysis use the same metric definitions.
 
-The SQL analysis was performed in Snowflake.
+---
 
-The queries used to analyse the data are available in the `sql` folder.
+## 🧪 Metric Validation
 
-The analysis includes:
+An important part of the project was validating that metrics remained consistent between the underlying Snowflake analysis and the Power BI reporting layer.
 
-- Filtering data using `WHERE`
-- Aggregating data using `SUM`, `AVG` and `COUNT`
-- Grouping results using `GROUP BY`
-- Sorting results using `ORDER BY`
-- Ranking and limiting results
-- Handling missing values using `IS NOT NULL`
-- Rounding numerical results using `ROUND`
+This included:
 
-The queries were designed to answer business-focused questions around customer behaviour, product performance and purchasing activity.
+- Validating purchase revenue
+- Comparing brand and category revenue
+- Checking funnel calculations
+- Comparing event-level and session-level conversion
+- Ensuring Power BI visual filters matched the intended metric definitions
 
-## Project Objective
+This helped ensure that the final dashboard reflects the same analytical definitions used in the underlying SQL analysis.
 
-The objective of this project was to demonstrate the ability to:
+---
 
-- Analyse large-scale e-commerce event data
-- Write SQL queries in Snowflake
-- Identify meaningful customer and revenue patterns
-- Transform analysis into clear business insights
-- Build an interactive Power BI dashboard
-- Present data analysis in a professional and accessible format
+## 📊 Power BI Dashboard
 
-## Power BI Dashboard
+The Power BI dashboard brings the main analysis together into a single view.
 
-The Power BI dashboard provides an overview of customer engagement, purchasing behaviour and product performance.
+It includes:
 
-![E-commerce Power BI Dashboard](E_Commerce_PowerBi_Dashboard.PNG)
+- Total events
+- Total revenue
+- Total purchases
+- Session cart-to-purchase rate
+- Events by type
+- Purchase revenue by brand
+- Revenue by category
+- Average purchase price by category
+- Top users by purchase activity
+- Top users by spending
 
-### Dashboard KPIs
+### Dashboard
 
-The dashboard contains four main KPIs:
+![Power BI Dashboard](E_Commerce_PowerBi_Dashboard.PNG)
 
-- **Total Events:** 884,474
-- **Total Revenue:** €5.13M
-- **Total Purchases:** 37,343
-- **Cart-to-Purchase Rate:** 69.11%
+[View the full Power BI dashboard](E-commerce_user_behavior_Dashboard.pdf)
+
+
+---
+
+## 🔎 Key Findings
 
 ### Customer Engagement
 
-The dataset contains **884,474 total events**.
+Product views make up the majority of recorded events, showing that browsing activity is substantially higher than cart and purchase activity.
 
-Event activity is heavily concentrated around product views:
+### Purchasing Behaviour
 
-- **Views:** approximately 790K
-- **Cart events:** approximately 50K
-- **Purchases:** approximately 40K
+The dataset contains **37,343 purchase events**, providing a substantial base for analysing purchasing behaviour.
 
-This shows that product browsing represents the largest stage of customer activity, while a smaller proportion of events progress through the purchasing funnel.
+### Revenue
 
-### Cart-to-Purchase Conversion
+Total purchase revenue is approximately **€5.13M**, with significant differences in revenue across brands and product categories.
 
-The dashboard reports a **69.11% cart-to-purchase rate**.
+### Funnel Conversion
 
-This indicates that a significant proportion of recorded cart events progress to a purchase, suggesting relatively strong conversion among users who have already demonstrated purchase intent.
+The session-level cart-to-purchase rate is **50.31%**.
 
-### Brand Performance
+The difference between the event-level rate of **69.11%** and the session-level rate demonstrates why metric definitions and aggregation level are important when analysing customer journeys.
 
-The dashboard compares purchase value across brands.
+### Customer Spending
 
-The highest-performing brands include:
+The dashboard identifies users with comparatively high purchase activity and spending, allowing potential high-value customer behaviour to be explored.
 
-| Brand | Purchase Value |
-|---|---:|
-| Top brand | €16.2M |
-| Palit | €11.6M |
-| MSI | €9.0M |
-| Gigabyte | €8.8M |
-| ASUS | €6.7M |
-| Samsung | €4.9M |
-| AMD | €3.7M |
-| LG | €3.3M |
-| Sapphire | €3.2M |
+---
 
-Palit, MSI and Gigabyte are among the strongest-performing brands in the analysis.
+## ⚠️ Limitations
 
-### Revenue by Category
+- The dataset represents recorded website events rather than complete customer histories.
+- Event-level and session-level conversion metrics measure different aspects of user behaviour.
+- The analysis is limited to the fields available in the dataset.
+- Customer retention and long-term behaviour cannot be fully evaluated from the available event data alone.
+- Correlation-based observations should not be interpreted as proof of causation.
 
-The dashboard identifies the strongest product categories based on recorded purchase value.
+---
 
-The leading category generated approximately **€45M**, followed by a category generating approximately **€20M**.
+## 🎯 Skills Demonstrated
 
-Other leading categories include:
+- Snowflake
+- SQL
+- Data cleaning
+- Data-quality validation
+- Event-level analytics
+- Session-level analysis
+- Funnel analysis
+- CTEs
+- JOINs
+- Aggregation
+- Window functions
+- Revenue analysis
+- Metric validation
+- Power BI
+- Data visualisation
+- Business-focused analytical reporting
+- GitHub version control
 
-- Electronics video and TV
-- Computer peripherals
-- Electronics telephone
-- Computer components
-- Electronics audio and acoustic
+---
 
-These results highlight the importance of computer and electronics-related categories within the dataset.
+## 🤖 AI Assistance
 
-### Average Purchase Price
+AI assistance was used during development for some coding help and validation.
 
-The dashboard also compares average purchase prices across categories.
-
-The highest average purchase prices shown are:
-
-| Category | Average Purchase Price |
-|---|---:|
-| Electronics video/projectors | €746.69 |
-| Appliances/kitchen | €666.57 |
-| Electronics audio/music | €436.68 |
-| Country yard cultivator | €429.05 |
-| Computer components | €385.98 |
-| Computer peripherals | €375.43 |
-| Electronics video/TV | €354.06 |
-
-This provides an indication of which categories contain higher-value purchases.
-
-### Top Users by Purchases
-
-The dashboard identifies the users with the highest number of recorded purchase events.
-
-The highest purchasing user recorded **56 purchases**, followed by users with:
-
-- 49 purchases
-- 45 purchases
-- 43 purchases
-- 42 purchases
-- 39 purchases
-- 36 purchases
-- 33 purchases
-
-This helps identify highly active customers within the dataset.
-
-### Top Users by Spending
-
-The dashboard also identifies the highest-spending users.
-
-The highest-spending user generated approximately **€12.1K** in recorded purchase value.
-
-Other high-spending users generated approximately:
-
-- €9.4K
-- €8.6K
-- €8.4K
-- €8.0K
-- €6.6K
-- €6.3K
-- €5.9K
-- €5.7K
-- €5.5K
-
-This analysis helps highlight customers with comparatively high purchasing value.
-
-## Key Findings
-
-The analysis identified several important patterns:
-
-1. **Product views dominate customer activity**, with approximately 790K view events compared with around 50K cart events and 40K purchase events.
-
-2. **The cart-to-purchase rate is 69.11%**, indicating strong conversion among recorded cart events.
-
-3. **Total revenue is €5.13M**, with 37,343 recorded purchases shown in the dashboard KPI.
-
-4. **Brand performance varies considerably**, with the leading brand recording approximately €16.2M in purchase value, followed by Palit at €11.6M, MSI at €9.0M and Gigabyte at €8.8M.
-
-5. **Computer and electronics categories represent major areas of purchase activity**, with the leading category recording approximately €45M in the category breakdown.
-
-6. **Average purchase prices vary substantially between categories**, with the highest category average reaching €746.69.
-
-7. **A small number of users show particularly high levels of purchasing activity**, with the highest user recording 56 purchases.
-
-8. **High-spending customers can be identified from the event data**, with the highest-spending user recording approximately €12.1K.
-
-> Note: The category and brand charts use aggregated `PRICE` values from the underlying event data, while the dashboard's Total Revenue KPI represents the project's revenue measure. These figures should therefore be interpreted as separate dashboard measures rather than directly compared.
-
-## SQL Questions
-
-The SQL analysis was structured around business questions relating to:
-
-- Customer engagement
-- Event activity
-- Purchasing behaviour
-- Revenue and product categories
-- Brand performance
-- Customer purchasing frequency
-- Customer spending
-- Average purchase prices
-- Ranking and identifying top-performing users and products
-
-The SQL queries used to answer these questions are available in the `sql` folder.
-
-## Business Value
-
-This analysis demonstrates how e-commerce event data can be transformed into actionable business information.
-
-The results can help businesses:
-
-- Understand customer behaviour throughout the purchasing funnel
-- Identify high-performing brands and categories
-- Identify high-value customers
-- Monitor purchasing activity
-- Compare average product prices
-- Understand conversion behaviour
-- Support data-driven commercial decisions
+---
+- **SQL** – data exploration, cleaning, validation and analytics
+- **Power BI** – dashboard development and data visualisation
+- **GitHub** – version control and project documentation
